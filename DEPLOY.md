@@ -40,26 +40,37 @@ For each repo that serves a site:
 
 ## Cloudflare DNS
 
+We run **Cloudflare-proxied (orange cloud)** in front of GitHub Pages. Cloudflare
+terminates TLS at its edge with its own cert; Pages is the origin. This is the
+setup that's live — *not* the DNS-only / GitHub-cert path.
+
 In the `benchkit-labs.dev` zone:
 
 | Type | Name | Content | Proxy |
 |---|---|---|---|
-| A | `@` | `185.199.108.153` | DNS only (grey cloud) |
-| A | `@` | `185.199.109.153` | DNS only |
-| A | `@` | `185.199.110.153` | DNS only |
-| A | `@` | `185.199.111.153` | DNS only |
-| CNAME | `www` | `benchkit-labs.github.io` | DNS only |
-| CNAME | `gapps-embed` | `benchkit-labs.github.io` | DNS only |
+| A | `@` | `185.199.108.153` | Proxied (orange) |
+| A | `@` | `185.199.109.153` | Proxied |
+| A | `@` | `185.199.110.153` | Proxied |
+| A | `@` | `185.199.111.153` | Proxied |
+| CNAME | `www` | `benchkit-labs.github.io` | Proxied |
+| CNAME | `gapps-embed` | `benchkit-labs.github.io` | Proxied |
 
-Every new tool subdomain = **one CNAME record** → `benchkit-labs.github.io`
-(plus that repo's `CNAME` file + Pages enabled).
+(Cloudflare may show the proxied apex/subdomain resolving to its own IPs —
+`104.21.x` / `172.67.x` — rather than the `185.199.x` Pages IPs. That's expected
+with the proxy on.)
 
-> **Proxy must be "DNS only" (grey cloud), not proxied (orange).** GitHub Pages
-> provisions its own Let's Encrypt cert for the custom domain; Cloudflare's proxy
-> in front of Pages causes cert-validation and redirect-loop issues unless you
-> configure Cloudflare's own TLS to match. Grey-cloud is the simplest correct
-> setup. (If you later want Cloudflare's CDN/WAF in front, switch to Full-strict
-> TLS and confirm the Pages cert still validates first.)
+Every new tool subdomain = **one CNAME record** → `benchkit-labs.github.io`,
+orange-cloud (plus that repo's `CNAME` file + Pages enabled).
+
+> **SSL/TLS mode must be Full or Full (strict), never Flexible.** With the proxy
+> on, Cloudflare → origin encryption is set under **SSL/TLS → Overview**. Pages
+> presents a valid cert, so **Full (strict)** is correct. *Flexible* makes
+> Cloudflare talk to Pages over plain HTTP and is the usual cause of redirect
+> loops — avoid it.
+>
+> Because Cloudflare owns the cert, leave GitHub's **Settings → Pages → Enforce
+> HTTPS** as-is; the public TLS the visitor sees is Cloudflare's edge cert, not
+> the Pages Let's Encrypt one.
 
 ## Adding a new tool with a web page
 
@@ -67,6 +78,6 @@ Every new tool subdomain = **one CNAME record** → `benchkit-labs.github.io`
    copy the inline CSS theme from an existing page.
 2. Add a `CNAME` file: `<tool>.benchkit-labs.dev`.
 3. Enable Pages (branch `main`, root).
-4. Cloudflare: add CNAME `<tool>` → `benchkit-labs.github.io`, DNS only.
+4. Cloudflare: add CNAME `<tool>` → `benchkit-labs.github.io`, proxied (orange).
 5. Add a project card to the org homepage (`index.html`) linking
    `https://<tool>.benchkit-labs.dev`.
