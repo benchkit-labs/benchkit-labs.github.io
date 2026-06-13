@@ -1,0 +1,10 @@
+# Internal Claude context — never publish (this repo serves from root)
+.claude/
+CLAUDE.md
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
