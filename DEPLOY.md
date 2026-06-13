@@ -1,4 +1,4 @@
-# Benchkit Labs — site architecture & deployment
+# BenchKit Labs — site architecture & deployment
 
 How the org homepage and each tool's pages map to domains. One repo per tool,
 each served as its own static GitHub Pages site under its own subdomain. DNS is
