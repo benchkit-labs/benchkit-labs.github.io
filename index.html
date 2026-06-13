@@ -3,9 +3,12 @@
    B  E  N  C  H  K  I  T    L  A  B  S
 
    The org landing page for benchkit-labs.dev.
-   One HTML page, vanilla JS, no framework, no build — same recipe as every
-   tool we ship. The palette, the app-shell, the chrome: all lifted straight
-   from gapps-embed so the org page and its products feel like one family.
+   One HTML page, vanilla JS, no framework, no build.
+
+   Surface model: light by default. The navy/teal that the product pages wear
+   wall-to-wall is used here only as an *accent* — two dark bands (hero + the
+   closing strip) lit against an otherwise light page, so the dark reads as a
+   highlight rather than the whole mood.
        github.com/benchkit-labs
 -->
 <html lang="en">
@@ -13,66 +16,71 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Benchkit Labs</title>
-<meta name="description" content="Benchkit Labs builds small, sharp, free software tools — no build step, no tracking, no accounts. Static HTML and vanilla JavaScript, MIT-licensed.">
+<meta name="description" content="Benchkit Labs — a place to publish small, free software tools. Static, MIT-licensed, no tracking.">
 
 <style>
   :root {
+    /* Dark accent palette — same family as the product pages, used here only
+       in the lit bands (hero, closing strip, header). */
     --navy:        #16273A;
     --navy-deep:   #0E1B2A;
     --navy-soft:   #1E3147;
     --teal:        #1FA9A5;
     --teal-bright: #3CDCC0;
-    --ink:         #E6EEF5;
-    --ink-mute:    #9BA9B8;
-    --line:        rgba(255,255,255,0.08);
-    --tile:        #1A2C42;
-    --pill-bg:     rgba(60, 220, 192, 0.12);
-    --pill-text:   #3CDCC0;
-    --soon-bg:     rgba(255, 197, 100, 0.12);
-    --soon-text:   #FFD27A;
+    --teal-ink:    #0E8C86;   /* teal dark enough to read as a link on light paper */
+
+    /* Light surface — the page default. */
+    --paper:       #F7F9FB;   /* page background */
+    --paper-card:  #FFFFFF;   /* raised tiles */
+    --paper-sunk:  #EEF2F6;   /* recessed chips/meta */
+    --ink:         #16273A;   /* primary text on light = the navy, for family continuity */
+    --ink-soft:    #4A5C6E;   /* secondary text on light */
+    --ink-faint:   #76889A;   /* tertiary / monospace muted */
+    --line-light:  #E2E8EE;   /* borders on light */
+
+    /* Text colors for use inside the dark bands. */
+    --on-dark:     #E6EEF5;
+    --on-dark-mute:#9BA9B8;
+    --line-dark:   rgba(255,255,255,0.08);
+
+    --pill-bg:     rgba(31, 169, 165, 0.12);
+    --pill-text:   #0E8C86;
+    --soon-bg:     rgba(193, 132, 17, 0.12);
+    --soon-text:   #9A6A0E;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Universal focus ring — teal, visible only on keyboard focus. */
   :focus { outline: none; }
   :focus-visible {
-    outline: 2px solid var(--teal-bright);
+    outline: 2px solid var(--teal);
     outline-offset: 3px;
     border-radius: 4px;
     transition: outline-offset 0.12s ease-out;
   }
   .btn-primary:focus-visible,
-  .btn-secondary:focus-visible {
-    outline-offset: 2px;
-    border-radius: 8px;
-  }
+  .btn-secondary:focus-visible { outline-offset: 2px; border-radius: 8px; }
+
   .skip-link {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    top: 8px; left: 8px;
     padding: 10px 18px;
     background: var(--teal-bright);
     color: var(--navy-deep);
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: 600; font-size: 14px;
     border-radius: 8px;
     text-decoration: none;
     transform: translateY(-120%);
     transition: transform 0.18s ease-out;
     z-index: 100;
   }
-  .skip-link:focus-visible {
-    transform: translateY(0);
-    outline: none;
-  }
+  .skip-link:focus-visible { transform: translateY(0); outline: none; }
 
-  /* App-shell: non-scrolling flex column; header + footer pinned, a single
-     .content-well between them is the only scroll region — same chrome model
-     as every tool in the catalog, so the org page sits flush with them. */
+  /* App-shell: pinned header + footer, a single scrolling .content-well between.
+     Same chrome model as the product pages. */
   html, body { height: 100%; }
   body {
-    background: var(--navy-deep);
+    background: var(--paper);
     color: var(--ink);
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
     line-height: 1.6;
@@ -90,13 +98,13 @@
     scroll-padding-top: 16px;
   }
 
-  a { color: var(--teal-bright); text-decoration: none; }
+  a { color: var(--teal-ink); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
-  /* ── Header ── */
+  /* ── Header (dark — the top of the page's lit frame) ── */
   header {
     background: var(--navy);
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--line-dark);
     padding: 0 32px;
     height: 64px;
     display: flex;
@@ -105,117 +113,77 @@
     flex-shrink: 0;
   }
 
-  .wordmark {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-  }
-
-  /* The mark: a small teal beaker outline rendered in pure CSS — a nod to
-     "Labs" without shipping an image. Decorative, hidden from AT. */
-  .mark {
-    width: 26px;
-    height: 26px;
-    flex-shrink: 0;
-  }
+  .wordmark { display: flex; align-items: center; gap: 11px; }
+  .mark { width: 26px; height: 26px; flex-shrink: 0; }
 
   header h1 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--ink);
+    font-size: 18px; font-weight: 600;
+    color: var(--on-dark);
     letter-spacing: 0.01em;
   }
-
-  header h1 .labs {
-    font-weight: 300;
-    color: var(--ink-mute);
-    margin-left: 2px;
-  }
+  header h1 .labs { font-weight: 300; color: var(--on-dark-mute); margin-left: 2px; }
 
   header .ver {
     font-size: 11px;
-    background: var(--pill-bg);
-    color: var(--pill-text);
+    background: rgba(60,220,192,0.14);
+    color: var(--teal-bright);
     padding: 3px 9px;
     border-radius: 99px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    font-weight: 600; letter-spacing: 0.04em;
   }
 
-  header nav {
-    margin-left: auto;
-    display: flex;
-    gap: 22px;
-    font-size: 14px;
-  }
+  header nav { margin-left: auto; display: flex; gap: 22px; font-size: 14px; }
+  header nav a { color: var(--on-dark-mute); transition: color 0.15s; padding: 2px 0; }
+  header nav a:hover { color: var(--on-dark); text-decoration: none; }
 
-  header nav a {
-    color: var(--ink-mute);
-    transition: color 0.15s;
-    padding: 2px 0;
-  }
-
-  header nav a:hover {
-    color: var(--ink);
-    text-decoration: none;
-  }
-
-  /* ── Hero ── */
+  /* ── Hero (dark accent band) ── */
   .hero {
+    background: var(--navy-deep);
+    border-bottom: 1px solid var(--line-dark);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-inner {
     text-align: center;
     padding: 72px 32px 80px;
     max-width: 1000px;
     margin: 0 auto;
     position: relative;
   }
-
-  /* Residual flare — the org page carries the static 0.18 glow that subpages
-     wear. The launch ignition belongs to whichever product just shipped, not
-     to the home. */
+  /* Residual teal glow, low and static — the only flourish carried over. */
   .hero::before {
     content: '';
     position: absolute;
-    top: 20px;
-    left: 50%;
+    top: -120px; left: 50%;
     transform: translateX(-50%);
-    width: 460px;
-    height: 460px;
+    width: 620px; height: 620px;
     background: radial-gradient(circle, rgba(60,220,192,1) 0%, rgba(60,220,192,0) 70%);
-    opacity: 0.18;
+    opacity: 0.14;
     pointer-events: none;
-    z-index: 0;
   }
+  .hero-inner > * { position: relative; z-index: 1; }
 
-  .hero > * { position: relative; z-index: 1; }
-
-  .status-row {
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 24px;
-  }
   .status-pill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 12px; font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--pill-text);
-    background: var(--pill-bg);
+    color: var(--teal-bright);
+    background: rgba(60,220,192,0.12);
     padding: 6px 14px;
     border-radius: 99px;
+    margin-bottom: 24px;
   }
 
   .hero h2 {
-    font-size: 48px;
-    font-weight: 300;
+    font-size: 46px; font-weight: 300;
     line-height: 1.15;
     margin-bottom: 22px;
     letter-spacing: -0.015em;
+    color: var(--on-dark);
   }
-
   .hero h2 strong {
     font-weight: 700;
     background: linear-gradient(90deg, var(--teal), var(--teal-bright));
@@ -226,17 +194,12 @@
 
   .hero p {
     font-size: 18px;
-    color: var(--ink-mute);
-    max-width: 760px;
+    color: var(--on-dark-mute);
+    max-width: 720px;
     margin: 0 auto 36px;
   }
 
-  .hero-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
   .btn-primary {
     display: inline-block;
@@ -244,103 +207,57 @@
     background: linear-gradient(135deg, var(--teal), var(--teal-bright));
     color: var(--navy-deep);
     border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 15px; font-weight: 600;
     border: none;
     transition: transform 0.15s, box-shadow 0.15s;
     box-shadow: 0 4px 16px rgba(60,220,192,0.18);
   }
-
   .btn-primary:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(60,220,192,0.3);
     text-decoration: none;
   }
 
+  /* Secondary button — adapts to its band via a --btn-border var. */
   .btn-secondary {
     display: inline-block;
     padding: 13px 28px;
-    border: 1px solid rgba(255,255,255,0.18);
-    color: var(--ink);
+    border: 1px solid var(--btn-border, rgba(255,255,255,0.18));
+    color: var(--btn-ink, var(--on-dark));
     border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 15px; font-weight: 500;
     transition: background 0.15s, border-color 0.15s;
   }
-
   .btn-secondary:hover {
-    background: rgba(255,255,255,0.06);
-    border-color: rgba(255,255,255,0.28);
+    background: var(--btn-hover, rgba(255,255,255,0.06));
     text-decoration: none;
   }
 
-  /* ── Principles strip ── */
-  .principles {
-    background: var(--navy);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 28px 32px;
-  }
-
-  .principles ul {
-    list-style: none;
-    max-width: 1000px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-  }
-
-  .principles li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 14px;
-    color: var(--ink-mute);
-  }
-
-  .principles li strong {
-    color: var(--ink);
-    font-weight: 600;
-  }
-
-  .principles .icon {
-    color: var(--teal-bright);
-    font-size: 18px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  /* ── Section scaffolding ── */
+  /* ── Section scaffolding (on light) ── */
   .section-eyebrow {
     text-align: center;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 12px; font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--teal-bright);
+    color: var(--teal-ink);
     margin-bottom: 12px;
   }
-
   .section-title {
     text-align: center;
-    font-size: 32px;
-    font-weight: 300;
+    font-size: 30px; font-weight: 300;
     margin-bottom: 16px;
     letter-spacing: -0.01em;
+    color: var(--ink);
   }
-
   .section-lede {
     text-align: center;
-    color: var(--ink-mute);
-    max-width: 760px;
+    color: var(--ink-soft);
+    max-width: 720px;
     margin: 0 auto 48px;
   }
 
-  /* ── Projects ── */
-  .projects {
-    padding: 80px 32px;
-  }
+  /* ── Projects (light) ── */
+  .projects { padding: 76px 32px 84px; }
 
   .cards {
     display: grid;
@@ -351,215 +268,147 @@
   }
 
   .card {
-    background: var(--tile);
+    background: var(--paper-card);
     border-radius: 14px;
     padding: 28px;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-light);
     display: flex;
     flex-direction: column;
     gap: 14px;
-    transition: border-color 0.15s, transform 0.15s;
+    box-shadow: 0 1px 2px rgba(22,39,58,0.04), 0 8px 24px rgba(22,39,58,0.05);
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
   }
-
   .card:hover {
-    border-color: rgba(60,220,192,0.3);
+    border-color: rgba(31,169,165,0.45);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(22,39,58,0.06), 0 14px 32px rgba(22,39,58,0.08);
   }
 
-  .card-head {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .card-head { display: flex; align-items: center; gap: 12px; }
 
   .card-glyph {
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     border-radius: 11px;
-    background: var(--navy-deep);
-    border: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
+    background: var(--navy);
+    color: var(--teal-bright);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px;
     flex-shrink: 0;
   }
 
   .card-badge {
     display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 11px; font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     padding: 4px 10px;
     border-radius: 99px;
     align-self: flex-start;
   }
-
   .badge-live { background: var(--pill-bg); color: var(--pill-text); }
   .badge-soon { background: var(--soon-bg); color: var(--soon-text); }
 
   .card h4 {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 22px; font-weight: 600;
     color: var(--ink);
     letter-spacing: -0.01em;
   }
 
-  .card-tag {
+  .card p { font-size: 14px; color: var(--ink-soft); flex: 1; }
+
+  .card code {
     font-family: 'Menlo', 'Consolas', monospace;
     font-size: 12px;
-    color: var(--ink-mute);
+    color: var(--teal-ink);
+    background: var(--paper-sunk);
+    padding: 1px 5px;
+    border-radius: 3px;
   }
 
-  .card p {
-    font-size: 14px;
-    color: var(--ink-mute);
-    flex: 1;
-  }
-
-  .card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
+  .card-meta { display: flex; flex-wrap: wrap; gap: 8px; }
   .card-meta span {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--ink-mute);
-    background: var(--navy-deep);
-    border: 1px solid var(--line);
+    font-size: 11px; font-weight: 600;
+    color: var(--ink-faint);
+    background: var(--paper-sunk);
+    border: 1px solid var(--line-light);
     padding: 3px 9px;
     border-radius: 99px;
   }
 
-  .card-links {
-    display: flex;
-    gap: 18px;
-    margin-top: 2px;
-  }
-
+  .card-links { display: flex; gap: 18px; margin-top: 2px; }
   .card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--teal-bright);
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 14px; font-weight: 600;
+    color: var(--teal-ink);
   }
-
   .card-link:hover { text-decoration: none; }
-
-  .card-link.muted {
-    color: var(--ink-mute);
-    font-weight: 500;
-  }
-
+  .card-link.muted { color: var(--ink-faint); font-weight: 500; }
   .card-link.muted:hover { color: var(--ink); }
 
-  .card.coming-soon { opacity: 0.72; }
+  .card.coming-soon { background: var(--paper-sunk); box-shadow: none; }
+  .card.coming-soon:hover { transform: none; box-shadow: none; border-color: var(--line-light); }
 
-  /* ── Approach ── */
-  .approach {
-    background: var(--navy);
-    padding: 80px 32px;
-    border-top: 1px solid var(--line);
-  }
-
-  .approach-inner { max-width: 1000px; margin: 0 auto; }
-
-  .approach-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-  }
-
-  .approach-group {
-    background: var(--tile);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 24px 26px;
-  }
-
-  .approach-group h5 {
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--teal-bright);
-    margin-bottom: 12px;
-  }
-
-  .approach-group p {
-    font-size: 14px;
-    color: var(--ink-mute);
-  }
-
-  .approach-group p code {
-    font-family: 'Menlo', 'Consolas', monospace;
-    font-size: 12px;
-    color: var(--teal-bright);
-    background: rgba(0,0,0,0.3);
-    padding: 1px 6px;
-    border-radius: 3px;
-  }
-
-  /* ── Closing CTA ── */
+  /* ── Closing strip (dark accent band — bookends the hero) ── */
   .cta {
     background: var(--navy-deep);
-    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-    padding: 56px 32px; text-align: center;
+    border-top: 1px solid var(--line-dark);
+    border-bottom: 1px solid var(--line-dark);
+    padding: 64px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
   }
-  .cta h3 { font-size: 28px; font-weight: 300; margin-bottom: 14px; letter-spacing: -0.01em; }
-  .cta p { font-size: 16px; color: var(--ink-mute); max-width: 760px; margin: 0 auto 28px; line-height: 1.7; }
+  .cta::before {
+    content: '';
+    position: absolute;
+    bottom: -160px; left: 50%;
+    transform: translateX(-50%);
+    width: 560px; height: 560px;
+    background: radial-gradient(circle, rgba(60,220,192,1) 0%, rgba(60,220,192,0) 70%);
+    opacity: 0.10;
+    pointer-events: none;
+  }
+  .cta > * { position: relative; z-index: 1; }
+  .cta h3 { font-size: 28px; font-weight: 300; margin-bottom: 14px; letter-spacing: -0.01em; color: var(--on-dark); }
+  .cta p { font-size: 16px; color: var(--on-dark-mute); max-width: 720px; margin: 0 auto 28px; line-height: 1.7; }
 
-  /* ── Footer ── */
+  /* ── Footer (light) ── */
   footer {
-    background: var(--navy);
-    border-top: 1px solid var(--line);
-    padding: 10px 32px;
+    background: var(--paper);
+    border-top: 1px solid var(--line-light);
+    padding: 12px 32px;
     display: flex;
     align-items: center;
     gap: 16px;
     font-family: 'Menlo', 'Consolas', monospace;
     font-size: 11px;
-    color: var(--ink-mute);
+    color: var(--ink-faint);
     flex-wrap: wrap;
     justify-content: center;
     flex-shrink: 0;
   }
-
   footer p { margin: 0; }
-  .footer-org { color: var(--ink-mute); }
-
   .footer-links { display: flex; gap: 10px; align-items: center; }
-  .footer-links a { color: var(--ink-mute); transition: color 0.15s; }
-  .footer-links a:hover { color: var(--teal-bright); text-decoration: none; }
+  .footer-links a { color: var(--ink-faint); transition: color 0.15s; }
+  .footer-links a:hover { color: var(--teal-ink); text-decoration: none; }
 
-  .footer-stats {
-    display: flex;
-    gap: 10px;
-    opacity: 0.7;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
+  .footer-stats { display: flex; gap: 10px; opacity: 0.8; align-items: center; flex-wrap: wrap; }
   .footer-stats .stat-sep { opacity: 0.5; }
 
   /* ── Mobile ── */
   @media (max-width: 640px) {
     header { height: auto; padding: 12px 18px; flex-wrap: wrap; }
     header nav { width: 100%; margin: 0; gap: 16px; }
-    .hero { padding: 48px 18px 56px; }
+    .hero-inner { padding: 48px 18px 56px; }
     .hero h2 { font-size: 32px; }
     .hero p { font-size: 16px; }
-    .projects, .approach, footer { padding-left: 18px; padding-right: 18px; }
+    .projects, .cta, footer { padding-left: 18px; padding-right: 18px; }
     .section-title { font-size: 26px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .btn-primary, .btn-secondary, .card { transition: none !important; }
-    .btn-primary:hover { transform: none; }
+    .btn-primary:hover, .card:hover { transform: none; }
   }
 </style>
 </head>
@@ -579,7 +428,6 @@
   <span class="ver">benchkit-labs.dev</span>
   <nav aria-label="Primary">
     <a href="#projects">Projects</a>
-    <a href="#approach">Approach</a>
     <a href="https://github.com/benchkit-labs">GitHub</a>
   </nav>
 </header>
@@ -588,30 +436,21 @@
 <div class="content-well" id="content-well">
 
 <section class="hero" id="main">
-  <div class="status-row">
-    <div class="status-pill">Small tools · Free · Local</div>
+  <div class="hero-inner">
+    <div class="status-pill">Small tools · Free · Static</div>
+    <h2>A place to publish <strong>small tools</strong>.</h2>
+    <p>Benchkit Labs is where a handful of little software projects live. Mostly static, MIT-licensed, no accounts and no tracking. Take what's useful, fork what you like, ignore the rest.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">See the projects</a>
+      <a href="https://github.com/benchkit-labs" class="btn-secondary">View on GitHub</a>
+    </div>
   </div>
-  <h2>Small, sharp tools that <strong>just work</strong>.</h2>
-  <p>Benchkit Labs builds focused utilities the way they ought to be built — static HTML and vanilla JavaScript, no build step, no accounts, no tracking. Open the source, fork it, self-host it. Every tool runs in your browser or on your machine, and nowhere else.</p>
-  <div class="hero-actions">
-    <a href="#projects" class="btn-primary">Browse the projects</a>
-    <a href="https://github.com/benchkit-labs" class="btn-secondary">View on GitHub</a>
-  </div>
-</section>
-
-<section class="principles">
-  <ul>
-    <li><span class="icon">⚡</span><span><strong>No build step.</strong> Static files you can read top to bottom.</span></li>
-    <li><span class="icon">🔓</span><span><strong>Free &amp; libre.</strong> MIT-licensed, zero monetization.</span></li>
-    <li><span class="icon">🖥</span><span><strong>Runs locally.</strong> No server, no tracking, no telemetry.</span></li>
-    <li><span class="icon">🛠</span><span><strong>One job, done well.</strong> Each tool is small on purpose.</span></li>
-  </ul>
 </section>
 
 <section class="projects" id="projects">
   <div class="section-eyebrow">The catalog</div>
-  <h3 class="section-title">What we've shipped</h3>
-  <p class="section-lede">A short list, kept short on purpose. Each project does one thing, owns its README, and stands entirely on its own.</p>
+  <h3 class="section-title">What's here</h3>
+  <p class="section-lede">A short list. Each project does one thing and owns its own repo and README.</p>
 
   <div class="cards">
 
@@ -621,7 +460,7 @@
         <span class="card-badge badge-live">Live — v1.0.0</span>
       </div>
       <h4>Gapps Embed</h4>
-      <p>A lightweight, themeable toolkit for embedding a Google apps grid on any website — one iframe, no build step, zero tracking. Theme it via query string or <code style="font-family:'Menlo','Consolas',monospace;font-size:12px;color:var(--teal-bright);background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;">postMessage</code>, rewrite URLs for any Workspace domain.</p>
+      <p>A lightweight, themeable toolkit for embedding a Google apps grid on any website — one iframe, no build step, no tracking. Theme it via query string or <code>postMessage</code>, rewrite URLs for any Workspace domain.</p>
       <div class="card-meta">
         <span>HTML</span><span>Vanilla JS</span><span>MIT</span>
       </div>
@@ -637,7 +476,7 @@
         <span class="card-badge badge-live">Live</span>
       </div>
       <h4>EOScard 400plus Prep</h4>
-      <p>A small Python utility for Windows that writes the two Canon boot flags (<code style="font-family:'Menlo','Consolas',monospace;font-size:12px;color:var(--teal-bright);background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;">EOS_DEVELOP</code> + <code style="font-family:'Menlo','Consolas',monospace;font-size:12px;color:var(--teal-bright);background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;">BOOTDISK</code>) required for a 400plus boot card on a Canon EOS 400D / Rebel XTi — no Canon MF files needed.</p>
+      <p>A small Python utility for Windows that writes the two Canon boot flags (<code>EOS_DEVELOP</code> + <code>BOOTDISK</code>) required for a 400plus boot card on a Canon EOS 400D / Rebel XTi — no Canon MF files needed.</p>
       <div class="card-meta">
         <span>Python</span><span>Windows</span><span>MIT</span>
       </div>
@@ -652,8 +491,8 @@
         <div class="card-glyph" aria-hidden="true">✦</div>
         <span class="card-badge badge-soon">In the works</span>
       </div>
-      <h4>More coming</h4>
-      <p>The bench is never quite empty. New tools land here when they're ready — same recipe every time: small, free, readable, and built to outlive whatever fad is shipping this quarter.</p>
+      <h4>More to come</h4>
+      <p>New tools land here when they're done. Watch the GitHub org if you want to know when something shows up.</p>
       <div class="card-meta">
         <span>Stay tuned</span>
       </div>
@@ -665,54 +504,20 @@
   </div>
 </section>
 
-<section class="approach" id="approach">
-  <div class="approach-inner">
-    <div class="section-eyebrow">How we build</div>
-    <h3 class="section-title">The same four rules, every time</h3>
-    <p class="section-lede">There's no house framework, no shared runtime, no telemetry pipeline. Just a set of constraints we hold every tool to.</p>
-
-    <div class="approach-grid">
-
-      <div class="approach-group">
-        <h5>Readable</h5>
-        <p>If you can't open the source and understand it in one sitting, it's too big. No build steps to reverse-engineer, no minified bundles — what you read is what runs.</p>
-      </div>
-
-      <div class="approach-group">
-        <h5>Private by default</h5>
-        <p>No accounts, no analytics, no cookies, no calling home. Web tools run entirely in your browser; desktop tools run entirely on your machine. Your data stays yours.</p>
-      </div>
-
-      <div class="approach-group">
-        <h5>Free &amp; libre</h5>
-        <p>Everything is MIT-licensed and zero-cost. Fork it, self-host it, strip our name off and ship your own. There's nothing to monetize and nothing to lock you in.</p>
-      </div>
-
-      <div class="approach-group">
-        <h5>Small on purpose</h5>
-        <p>One tool, one job. We'd rather ship three sharp utilities than one bloated suite. When a tool is done, it's done — and it keeps working.</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
 <section class="cta">
   <h3>Built in the open.</h3>
-  <p>Every Benchkit Labs tool is free, libre, and yours to read, fork, and self-host. Browse the source, file an issue, or just take what you need.</p>
+  <p>Everything here is on GitHub, MIT-licensed, and yours to read, fork, and self-host.</p>
   <a href="https://github.com/benchkit-labs" class="btn-primary">View the org on GitHub</a>
 </section>
 
 </div><!-- /.content-well -->
 
 <footer>
-  <p class="footer-org">Benchkit Labs · 2026 · MIT · Free, libre, local</p>
+  <p class="footer-org">Benchkit Labs · 2026 · MIT</p>
   <p class="footer-links">
     <a href="https://github.com/benchkit-labs">GitHub</a>
     <span class="stat-sep">·</span>
     <a href="#projects">Projects</a>
-    <span class="stat-sep">·</span>
-    <a href="#approach">Approach</a>
   </p>
   <p class="footer-stats" aria-live="polite">
     <span class="stat" id="stat-weight">— KB</span>
@@ -726,9 +531,8 @@
 </footer>
 
 <script>
-  // Same self-reporting weight/request counter the product pages carry — it
-  // proves the "no tracking, near-zero footprint" claim by measuring this very
-  // page's own network cost. Pure read of the Performance API; ships nothing.
+  // Self-reporting weight/request counter, same as the product pages — reads
+  // the Performance API to show this page's own network cost. Ships nothing.
   (function () {
     function update() {
       try {
