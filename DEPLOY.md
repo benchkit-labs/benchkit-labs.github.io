@@ -6,10 +6,14 @@ on Cloudflare.
 
 ## Layout
 
+Subdomains use the tool's **short marketing name**, not the repo name
+(`gapps-embed` repo → `gapps.*`; `snapp-ext` repo → `snapp.*`).
+
 | Repo | Serves | Domain |
 |---|---|---|
 | `benchkit-labs.github.io` | org homepage | `benchkit-labs.dev` (apex) + `www` |
 | `gapps-embed` | home + launcher + builder | `gapps.benchkit-labs.dev` |
+| `snapp-ext` | landing page (extension ships via stores) | `snapp.benchkit-labs.dev` |
 | `eoscard-400plus-prep` | (CLI tool — repo + README only for now) | — |
 
 Each repo owns its own landing page(s) next to its code, README, and issues.
@@ -53,7 +57,8 @@ In the `benchkit-labs.dev` zone:
 | A | `@` | `185.199.110.153` | Proxied |
 | A | `@` | `185.199.111.153` | Proxied |
 | CNAME | `www` | `benchkit-labs.github.io` | Proxied |
-| CNAME | `gapps-embed` | `benchkit-labs.github.io` | Proxied |
+| CNAME | `gapps` | `benchkit-labs.github.io` | Proxied |
+| CNAME | `snapp` | `benchkit-labs.github.io` | Proxied |
 
 (Cloudflare may show the proxied apex/subdomain resolving to its own IPs —
 `104.21.x` / `172.67.x` — rather than the `185.199.x` Pages IPs. That's expected
