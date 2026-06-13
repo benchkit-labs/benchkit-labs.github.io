@@ -9,7 +9,7 @@ on Cloudflare.
 | Repo | Serves | Domain |
 |---|---|---|
 | `benchkit-labs.github.io` | org homepage | `benchkit-labs.dev` (apex) + `www` |
-| `gapps-embed` | home + launcher + builder | `gapps-embed.benchkit-labs.dev` |
+| `gapps-embed` | home + launcher + builder | `gapps.benchkit-labs.dev` |
 | `eoscard-400plus-prep` | (CLI tool — repo + README only for now) | — |
 
 Each repo owns its own landing page(s) next to its code, README, and issues.
@@ -29,14 +29,14 @@ For each repo that serves a site:
 1. **Settings → Pages → Source:** Deploy from a branch → `main` / `/ (root)`.
 2. Add a **`CNAME`** file at the repo root containing the exact hostname:
    - `benchkit-labs.github.io` → `benchkit-labs.dev`
-   - `gapps-embed`             → `gapps-embed.benchkit-labs.dev`
+   - `gapps-embed`             → `gapps.benchkit-labs.dev`
 3. **Settings → Pages → Enforce HTTPS:** on (after the cert provisions, ~minutes).
 
 > ⚠️ Once a custom domain is set, the site serves at the **root** of that domain,
 > not under the old `/<repo>/` path. Keep all internal links **relative**
 > (`gapps-launcher.html`, not `/gapps-embed/gapps-launcher.html`) so they survive
 > the move. Absolute embed URLs in docs/snippets use the subdomain root, e.g.
-> `https://gapps-embed.benchkit-labs.dev/gapps-launcher.html`.
+> `https://gapps.benchkit-labs.dev/gapps-launcher.html`.
 
 ## Cloudflare DNS
 
