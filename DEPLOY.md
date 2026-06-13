@@ -6,15 +6,21 @@ on Cloudflare.
 
 ## Layout
 
-Subdomains use the tool's **short marketing name**, not the repo name
-(`gapps-embed` repo → `gapps.*`; `snapp-ext` repo → `snapp.*`).
+Repo names match the subdomains (`gapps` repo → `gapps.*`; `snapp` repo →
+`snapp.*`). Page files inside `gapps` are unprefixed (`launcher.html`,
+`builder.html`) since the subdomain already carries the product name.
 
 | Repo | Serves | Domain |
 |---|---|---|
 | `benchkit-labs.github.io` | org homepage | `benchkit-labs.dev` (apex) + `www` |
-| `gapps-embed` | home + launcher + builder | `gapps.benchkit-labs.dev` |
-| `snapp-ext` | landing page (extension ships via stores) | `snapp.benchkit-labs.dev` |
+| `gapps` | home + launcher + builder | `gapps.benchkit-labs.dev` |
+| `snapp` | landing page (extension ships via stores) | `snapp.benchkit-labs.dev` |
 | `eoscard-400plus-prep` | (CLI tool — repo + README only for now) | — |
+
+> CDN pins frozen at the `v1.0.0` tag still reference the old paths
+> (`gh/benchkit-labs/gapps-launcher.html`) because the tag predates the rename
+> — that's correct, leave them. GitHub redirects the old `gapps-embed` /
+> `snapp-ext` repo URLs to the new names indefinitely.
 
 Each repo owns its own landing page(s) next to its code, README, and issues.
 There is **no** central site repo aggregating the tool pages — the only shared
